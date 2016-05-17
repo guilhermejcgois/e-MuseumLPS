@@ -12,12 +12,12 @@ import java.util.List;
 public class Challenge {
 
 	/**
-	 * This field represents the annotation's id.
+	 * This field represents the challenge's id.
 	 */
 	private Long challengeId;
 	
 	/**
-	 * This fields represents the theme's description.
+	 * This fields represents the challenge's description.
 	 */
 	private String description;
 	
@@ -26,6 +26,12 @@ public class Challenge {
 	 * associated with this <code>Challenge</code> instance.
 	 */
 	private List<Answer> answers;
+
+	/**
+	 * This field represents the index of the <b>correct</b> <code>Answer
+	 * </code> in the <code>List<Answer> answers</code>.
+ 	 */
+	private int correctAnswerIndex;
 
 	/**
 	 * Class constructor.
@@ -103,6 +109,10 @@ public class Challenge {
 	 */
 	public void setAnswers(List<Answer> answers) {
 		this.answers = answers;
+
+		for (Answer answer : answers)
+			if (answer.isCorrect())
+				correctAnswerIndex = answers.indexOf(answer);
 	}
 
 	/**
@@ -126,6 +136,17 @@ public class Challenge {
 		challengeDO.setId(challengeId);
 
 		return challengeDO;
+	}
+
+	/**
+	 * Returns the data object representation for the <b>correct</b> answer 
+	 * of this <code>Challenge</code> instance.
+	 *
+	 * @return the data object representation for the <b>correct</b> answer 
+	 * of this <code>Challenge</code> instance.
+	 */
+	public Answer getCorrectAnswer() {
+		return answers.get(correctAnswerIndex);
 	}
 
 	/**
