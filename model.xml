@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+	<featureModel>
+		<properties/>
+		<struct>
+			<and abstract="true" mandatory="true" name="AHEAD">
+				<description>
+					
+				</description>
+				<or mandatory="true" name="MuseologicalObject">
+					<description>
+						
+					</description>
+					<feature mandatory="true" name="Image">
+						<description>
+							
+						</description>
+					</feature>
+					<feature mandatory="true" name="Text">
+						<description>
+							
+						</description>
+					</feature>
+				</or>
+			</and>
+		</struct>
+		<constraints/>
+		<calculations Auto="true" Constraints="true" Features="true" Redundant="true" Tautology="true"/>
+		<comments/>
+		<featureOrder userDefined="false"/>
+	</featureModel>
