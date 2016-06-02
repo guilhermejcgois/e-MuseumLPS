@@ -6,21 +6,26 @@
 				<description>
 					
 				</description>
-				<or mandatory="true" name="MuseologicalObject">
+				<and mandatory="true" name="Museum">
 					<description>
 						
 					</description>
-					<feature mandatory="true" name="Image">
+					<or name="MuseologicalObject">
 						<description>
 							
 						</description>
-					</feature>
-					<feature mandatory="true" name="Text">
-						<description>
-							
-						</description>
-					</feature>
-				</or>
+						<feature mandatory="true" name="Image">
+							<description>
+								
+							</description>
+						</feature>
+						<feature mandatory="true" name="Text">
+							<description>
+								
+							</description>
+						</feature>
+					</or>
+				</and>
 			</and>
 		</struct>
 		<constraints/>
