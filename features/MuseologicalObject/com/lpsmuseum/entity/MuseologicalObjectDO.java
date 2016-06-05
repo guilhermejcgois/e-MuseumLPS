@@ -1,3 +1,4 @@
+package com.lpsmuseum.entity;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -105,8 +106,8 @@ public class MuseologicalObjectDO implements Serializable {
 	 *
 	 * @param id the id of this museological object.
 	 */
-	public void setId(Long i) {
-		id = i;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	/**
@@ -123,8 +124,8 @@ public class MuseologicalObjectDO implements Serializable {
 	 *
 	 * @param name the name of this museological object.
 	 */
-	public void setName(String n) {
-		name = n;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
@@ -141,8 +142,8 @@ public class MuseologicalObjectDO implements Serializable {
 	 *
 	 * @param objectType the type of this museological object.
 	 */
-	public void setObjectType(Boolean type) {
-		objectType = type;
+	public void setObjectType(Boolean objectType) {
+		this.objectType = objectType;
 	}
 
 	/**
@@ -159,8 +160,8 @@ public class MuseologicalObjectDO implements Serializable {
 	 *
 	 * @param date the date of this museological object.
 	 */
-	public void setDate(Date d) {
-		date = d;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	/**

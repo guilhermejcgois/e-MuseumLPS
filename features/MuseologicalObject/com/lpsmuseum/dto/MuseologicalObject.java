@@ -1,3 +1,4 @@
+package com.lpsmuseum.dto;
 
 import java.util.Calendar;
 

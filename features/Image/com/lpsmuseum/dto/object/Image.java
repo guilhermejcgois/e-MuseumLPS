@@ -1,6 +1,7 @@
+package com.lpsmuseum.dto.object;
 
 import com.lpsmuseum.dto.MuseologicalObject;
-import com.lpsmuseum.entity.ImageDO;
+//import com.lpsmuseum.entity.ImageDO;
 
 /**
  * This class represents a <u>specialization</u> of <code>MuseologicalObject
@@ -31,7 +32,7 @@ public class Image extends MuseologicalObject {
 		this.urlAddress = urlAddress;
 	}
 
-	@Override
+	/*@Override
 	public ImageDO getEntity(){
 		ImageDO objDO = new ImageDO();
 		if(getId() != null) objDO.setId(getId());
@@ -40,5 +41,5 @@ public class Image extends MuseologicalObject {
 		objDO.setObjectType(getObjectType());
 		objDO.setUrlAddress(urlAddress);
 		return objDO;
-	}
+	}*/
 }

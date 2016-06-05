@@ -1,3 +1,4 @@
+package com.lpsmuseum.dto.object;
 
 import com.lpsmuseum.dto.MuseologicalObject;
 import com.lpsmuseum.entity.TextDO;
@@ -27,8 +28,8 @@ public class Text extends MuseologicalObject {
 	 * 
 	 * @param text the content of this <code>Text</code> instance.
 	 */
-	public void setText(String t) {
-		text = t;
+	public void setText(String text) {
+		this.text = text;
 	}
 
 	@Override

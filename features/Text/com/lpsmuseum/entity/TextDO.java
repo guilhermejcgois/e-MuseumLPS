@@ -1,3 +1,4 @@
+package com.lpsmuseum.entity;
 
 import com.lpsmuseum.dto.MuseologicalObject;
 import com.lpsmuseum.dto.object.Text;
@@ -17,13 +18,19 @@ import javax.persistence.Entity;
  * @see MuseologicalObjectDO
  */
 @Entity
-public refines class MuseologicalObjectDO {
+public class TextDO extends MuseologicalObjectDO {
 
 	/**
 	 * This fields represents the text. The column's name is <code>text</code>.
 	 */
 	@Column(name = "text")
 	String text;
+
+	/**
+	 * Class constructor.
+	 */
+	public TextDO() {
+	}
 
 	/**
 	 * Returns the text for this object.

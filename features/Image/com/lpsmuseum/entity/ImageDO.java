@@ -1,3 +1,4 @@
+package com.lpsmuseum.entity;
 
 import java.util.Calendar;
 
