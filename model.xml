@@ -10,7 +10,7 @@
 					<description>
 						
 					</description>
-					<or name="MuseologicalObject">
+					<alt mandatory="true" name="MuseologicalObject">
 						<description>
 							
 						</description>
@@ -24,7 +24,7 @@
 								
 							</description>
 						</feature>
-					</or>
+					</alt>
 				</and>
 			</and>
 		</struct>

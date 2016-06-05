@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.lpsmuseum.dao.MuseologicalObjectDAO;
 import com.lpsmuseum.dto.MuseologicalObject;
-import com.lpsmuseum.entity.ImageDO;
 import com.lpsmuseum.entity.MuseologicalObjectDO;
 
 /**
@@ -195,11 +194,6 @@ public class MuseologicalObjectService {
 		MuseologicalObjectDO obj = new MuseologicalObjectDO();
 
 		obj.setId(id);
-
-		/*if (dao.findEntity(obj) instanceof ImageDO) {
-			obj = new ImageDO();
-			obj.setId(id);
-		}*/
 
 		dao.deleteObject(obj);
 	}

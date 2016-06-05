@@ -3,8 +3,6 @@ package com.lpsmuseum.dto;
 import java.util.Calendar;
 
 //import com.lpsmuseum.behaviour.object.Indexation;
-import com.lpsmuseum.dto.object.Image;
-import com.lpsmuseum.dto.object.Text;
 import com.lpsmuseum.entity.MuseologicalObjectDO;
 
 /**

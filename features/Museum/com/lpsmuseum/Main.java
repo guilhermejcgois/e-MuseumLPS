@@ -20,42 +20,22 @@ public class Main {
 	private static Options options = new Options();
 	
 	private static void verifyFeatures() {
-		try {
-			Class.forName("com.lpsmuseum.entity.MuseologicalObjectDO");
-			features.put("object", true);
-		} catch (ClassNotFoundException exception) {
-			features.put("object", false);
-		}
-		try {
-			Class.forName("com.lpsmuseum.entity.ImageDO");
-			features.put("image", true);
-		} catch (ClassNotFoundException exception) {
-			features.put("image", false);
-		}
-		try {
-			Class.forName("com.lpsmuseum.entity.TextDO");
-			features.put("text", true);
-		} catch (ClassNotFoundException exception) {
-			features.put("text", false);
-		}
 	}
 	
 	private static void createOptions() {
 		// options.addOption(cmd, hasArgs, decription);
 		
-		if (features.get("object")) {
-			ActionOption object = new ActionOption("object", true, "Do an action with 'object' feature.");
-			object.add("create");
-			object.add("list");
-			options.addOption(object);
-		}
-		/*options.addOption(ActionOption.builder("object")
-				.hasArg().argName("create").argName("list")
-				.desc("Do an action with 'object' feature.")
-				.build());*/
 		options.addOption(ActionOption.builder("exit")
 				.desc("Exit the program.")
 				.build());
+	}
+	
+	private static void verifyOption(CommandLine line) throws ParseException {
+		if (line == null) {
+			continue;
+		} else if (line.hasOption("exit")) {
+			goAhead = false;
+		}
 	}
 	
 	public static void main(String[] args) {
@@ -76,22 +56,7 @@ public class Main {
 					continue;
 				
 				cmds = "-".concat(cmds);
-				CommandLine line = parser.parse(options, cmds.split(" "));
-				
-				String action = null;
-				if (line == null) {
-					continue;
-				} else if (line.hasOption("object")) {
-					action = line.getOptionValue("object");
-					ActionOption option = (ActionOption) options.getOption("object");
-					
-					if (!option.isValid(action))
-						throw new ParseException("Invalid action for object feature");
-					
-					
-				} else if (line.hasOption("exit")) {
-					goAhead = false;
-				}
+				verifyOption(parser.parse(options, cmds.split(" ")));
 			} catch (ParseException exception) {
 				System.out.println();
 				System.out.println("<feature> <action>");

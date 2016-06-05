@@ -5,7 +5,6 @@ import java.util.Calendar;
 
 //import com.lpsmuseum.dto.Annotation;
 import com.lpsmuseum.dto.MuseologicalObject;
-import com.lpsmuseum.dto.object.Image;
 //import com.lpsmuseum.service.AnnotationService;
 import com.lpsmuseum.service.MuseologicalObjectService;
 import java.util.List;
@@ -55,20 +54,6 @@ public class MuseologicalObjectBuilder {
 			as.createAnnotation(a);
 		}*/
 		return obj;
-	}
-
-	/**
-	 * Builds an <code>Image</code> instance with actual state.
-	 * 
-	 * @param name the name of the image.
-	 * @param date the <u>historial date</u> of the image.
-	 * @param urlAddress the URL address of the image.
-	 * @return the builded <code>Image</code> instance.
-	 */
-	public MuseologicalObject buildImage(String name, Calendar date, String urlAddress) {
-		Image image = new Image();
-		image.setUrlAddress(urlAddress);
-		return build(name, date, image);
 	}
 
 	/**
