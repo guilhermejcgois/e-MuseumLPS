@@ -1,3 +1,4 @@
+package com.lpsmuseum;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +16,7 @@ import org.apache.commons.cli.UnrecognizedOptionException;
 
 public class Main {
 	
-	private static Map features = new HashMap();
+	private static Map<String, Boolean> features = new HashMap<String, Boolean>();
 	private static Options options = new Options();
 	
 	private static void verifyFeatures() {
