@@ -1,0 +1,85 @@
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.UnrecognizedOptionException;
+
+import com.lpsmuseum.dto.MuseologicalObject;
+import com.lpsmuseum.service.MuseologicalObjectService;
+
+public refines class Main {
+	
+	private Map features = new HashMap();
+	private Options options = new Options();
+	private MuseologicalObjectService service = new MuseologicalObjectService();
+	
+	public void verifyFeatures() {
+		System.out.println("MO::verifyFeatures");
+		
+		Super().verifyFeatures();
+		
+		try {
+			Class.forName("com.lpsmuseum.entity.MuseologicalObjectDO");
+			features.put("object", true);
+		} catch (ClassNotFoundException exception) {
+			features.put("object", false);
+		}
+	}
+	
+	public void createOptions() {
+		System.out.println("MO::createOptions");
+		
+		Super().createOptions();
+		
+		// options.addOption(cmd, hasArgs, decription);
+		
+		if ((Boolean) features.get("object")) {
+			ActionOption object = new ActionOption("object", true, "Do an action with 'object' feature.");
+			object.add("create");
+			object.add("list");
+			options.addOption(object);
+		} 
+	}
+	
+	public boolean verifyOption(CommandLine line) throws ParseException {
+		System.out.println("MO::verifyOption");
+		
+		//boolean superRet = Super().verifyOption(line);
+		//if (superRet) return true;
+		
+		String action = null;
+		
+		if (line.hasOption("object")) {
+			System.out.println("is an object option");
+			action = line.getOptionValue("object");
+			ActionOption option = (ActionOption) options.getOption("object");
+			
+			if (!option.isValid(action))
+				throw new ParseException("Invalid action for object feature");
+			
+			if (action.equals("list")) {
+				System.out.println("is an object option list");
+				List<MuseologicalObject> objects = service.listObjects();
+				//for (MuseologicalObject object : objects)
+				for (Iterator it = objects.iterator(); it.hasNext(); )
+					it.next().toString();
+			}
+			return true;
+		} else {
+			System.out.println(line.getArgs());
+		}
+		
+		return Super().verifyOption(line);
+	}
+
+}

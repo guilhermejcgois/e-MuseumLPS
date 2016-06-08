@@ -7,59 +7,67 @@ import java.util.Scanner;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.UnrecognizedOptionException;
 
 public class Main {
-	
-	private static Map features = new HashMap();
-	private static Options options = new Options();
-	
-	private static void verifyFeatures() {
+
+	private Map features = new HashMap();
+	private Options options = new Options();
+
+	public void verifyFeatures() {
+		System.out.println("M::verifyFeatures");
 	}
-	
-	private static void createOptions() {
+
+	public void createOptions() {
+		System.out.println("M::createOptions");
+		
 		// options.addOption(cmd, hasArgs, decription);
-		
-		options.addOption(ActionOption.builder("exit")
-				.desc("Exit the program.")
-				.build());
+
+		options.addOption(ActionOption.builder("exit").desc("Exit the program.").build());
 	}
-	
-	private static void verifyOption(CommandLine line) throws ParseException {
+
+	public boolean verifyOption(CommandLine line) throws ParseException {
+		System.out.println("M::verifyOption");
+		
 		if (line == null) {
-			continue;
+			return true;
 		} else if (line.hasOption("exit")) {
-			goAhead = false;
+			return false;
 		}
-	}
-	
-	public static void main(String[] args) {
-		boolean goAhead = true;
 		
+		return true;
+	}
+
+	public void go() {
+		System.out.println("M::go");
+		
+		boolean goAhead = true;
+
 		verifyFeatures();
 		createOptions();
-		
+
 		CommandLineParser parser = new DefaultParser();
 		Scanner scanner = new Scanner(System.in);
-		
+
 		while (goAhead) {
 			try {
 				System.out.print(">> ");
 				String cmds = scanner.nextLine();
-				
+				System.out.println("Commands: " + cmds);
+
 				if (cmds.isEmpty())
 					continue;
-				
+
 				cmds = "-".concat(cmds);
-				verifyOption(parser.parse(options, cmds.split(" ")));
+				goAhead = verifyOption(parser.parse(options, cmds.split(" ")));
 			} catch (ParseException exception) {
 				System.out.println();
 				System.out.println("<feature> <action>");
-				for (Option option : options.getOptions()) {
+				// for (Option option : options.getOptions()) {
+				for (Iterator it = options.getOptions().iterator(); it.hasNext();) {
+					Option option = (Option) it.next();
 					System.out.print("    " + option.getOpt());
 					if (option instanceof ActionOption) {
 						Object actions[] = ((ActionOption) option).getActionArray();
@@ -73,8 +81,12 @@ public class Main {
 				System.out.println();
 			}
 		}
-		
+
 		System.out.println("Good bye!!");
+	}
+
+	public static void main(String[] args) {
+		new Main().go();
 	}
 
 }
