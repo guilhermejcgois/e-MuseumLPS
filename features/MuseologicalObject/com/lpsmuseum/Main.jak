@@ -1,4 +1,5 @@
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -16,7 +17,7 @@ import org.apache.commons.cli.UnrecognizedOptionException;
 
 import com.lpsmuseum.dto.MuseologicalObject;
 import com.lpsmuseum.service.MuseologicalObjectService;
-import com.sun.corba.se.spi.orbutil.fsm.Action;
+import com.lpsmuseum.service.builders.MuseologicalObjectBuilder;
 
 public refines class Main {
 	
@@ -42,12 +43,12 @@ public refines class Main {
 		
 		options = Super().createOptions();
 		
-		// options.addOption(cmd, hasArgs, decription);
-		
 		if ((Boolean) features.get("object")) {
 			ActionOption object = new ActionOption("object", true, "Do an action with 'object' feature.");
 			object.add("create");
 			object.add("list");
+			object.add("edit");
+			object.add("delete");
 			options.addOption(object);
 			System.out.println("object added to options: " + options.getOption("object").getDescription());
 		}
@@ -58,13 +59,10 @@ public refines class Main {
 	public boolean verifyOption(CommandLine line) throws ParseException {
 		System.out.println("MO::verifyOption");
 		
-		//boolean superRet = Super().verifyOption(line);
-		//if (superRet) return true;
-		
 		String action = null;
+		Scanner scanner = new Scanner(System.in);
 		
 		if (line.hasOption("object")) {
-			System.out.println("is an object option");
 			action = line.getOptionValue("object");
 			ActionOption option = (ActionOption) options.getOption("object");
 			
@@ -72,30 +70,90 @@ public refines class Main {
 				throw new ParseException("Invalid action for object feature");
 			
 			if (action.equals("list")) {
-				System.out.println("is an object option list");
 				List<MuseologicalObject> objects = service.listObjects();
-				//for (MuseologicalObject object : objects)
-				for (Iterator it = objects.iterator(); it.hasNext(); )
-					it.next().toString();
+				System.out.println(" ID | Name                                     | Date      ");
+				System.out.println("----+------------------------------------------+------------------------------");
+				for (Iterator it = objects.iterator(); it.hasNext(); ) {
+					MuseologicalObject object = (MuseologicalObject) it.next();
+					if (object.getId() < 10)
+						System.out.print(" 0" + object.getId() + " | ");
+					else
+						System.out.print(" " + object.getId() + " | ");
+					
+					String objectName = object.getName();
+					if (objectName.length() > 40)
+						objectName = objectName.substring(0, 40);
+					else while (objectName.length() < 39)
+						objectName = objectName.concat(" ");
+					System.out.print(objectName + " | ");
+					
+					System.out.println(object.getDate().toString());
+				}
+			} else if (action.equals("create")) {
+				System.out.print("Name: ");
+				String objectName = scanner.nextLine();
+				System.out.print("Date (dd/MM/yyyy): ");
+				String objectDate = scanner.nextLine();
+				Calendar calendar = Calendar.getInstance();
+				calendar.set(
+						Integer.valueOf(objectDate.substring(objectDate.lastIndexOf("/") + 1)), 
+						Integer.valueOf(objectDate.substring(objectDate.indexOf("/") + 1, objectDate.lastIndexOf("/"))), 
+						Integer.valueOf(objectDate.substring(0, objectDate.indexOf("/"))));
+				
+				service.createObject(new MuseologicalObjectBuilder().build(objectName, calendar));
+			} else if (action.equals("edit")) {
+				scanner.reset();
+
+				System.out.print("Id: ");
+				Long objectId = scanner.nextLong();
+				
+				MuseologicalObject object = service.findById(objectId);
+				boolean doUpdate = false;
+				
+				System.out.print("Name [" + object.getName() + "]: ");
+				String objectName = scanner.nextLine();
+				if (!objectName.isEmpty()) {
+					object.setName(objectName);
+					doUpdate = true;
+				}
+				
+				System.out.print("Date (dd/MM/yyyy) [" + object.getDate().toString() + "]: ");
+				String objectDate = scanner.nextLine();
+				if (!objectDate.isEmpty()) {
+					Calendar calendar = Calendar.getInstance();
+					calendar.set(
+							Integer.valueOf(objectDate.substring(objectDate.lastIndexOf("/") + 1)), 
+							Integer.valueOf(objectDate.substring(objectDate.indexOf("/") + 1, objectDate.lastIndexOf("/"))), 
+							Integer.valueOf(objectDate.substring(0, objectDate.indexOf("/"))));
+					object.setDate(calendar);
+					
+					if (!doUpdate)
+						doUpdate = true;
+				}
+				
+				if (doUpdate) {
+					service.editObject(object);
+					
+					System.out.println("The museological object with id=[" + objectId + "] was updated successfully!");
+				} else {
+					System.out.println("Not to do, sad... :/");
+				}
+			} else if (action.equals("delete")) {
+				scanner.reset();
+				
+				System.out.print("Id: ");
+				Long objectId = scanner.nextLong();
+				
+				service.deleteObject(objectId);
+				
+				System.out.println();
+				if (service.findById(objectId) == null)
+					System.out.println("The museological object with id=[" + objectId + "] was deleted successfully!");
+				else
+					System.out.println("How embarrassing, I can't delete the museological object with id=[" + objectId + "], sorry. :(");
 			}
 			return true;
-		} else {
-			System.out.println(line.getArgList().size());
 		}
-		
-		for (Iterator it = options.getOptions().iterator(); it.hasNext();) {
-			Option option = (Option) it.next();
-			System.out.print("    " + option.getOpt());
-			if (option instanceof ActionOption) {
-				Object actions[] = ((ActionOption) option).getActionArray();
-				if (actions.length > 0)
-					System.out.print("\t" + actions[0]);
-				for (int i = 1; i < actions.length; i++)
-					System.out.print("|" + actions[i]);
-			}
-			System.out.println("\t" + option.getDescription());
-		}
-		System.out.println();
 		
 		return Super().verifyOption(line);
 	}
