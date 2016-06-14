@@ -13,19 +13,21 @@ import org.apache.commons.cli.ParseException;
 
 public class Main {
 
-	private Map features = new HashMap();
-	private Options options = new Options();
+	protected Map features = new HashMap();
+	protected Options options = new Options();
 
 	public void verifyFeatures() {
 		System.out.println("M::verifyFeatures");
 	}
 
-	public void createOptions() {
+	public Options createOptions() {
 		System.out.println("M::createOptions");
 		
 		// options.addOption(cmd, hasArgs, decription);
 
 		options.addOption(ActionOption.builder("exit").desc("Exit the program.").build());
+		
+		return options;
 	}
 
 	public boolean verifyOption(CommandLine line) throws ParseException {
@@ -46,11 +48,11 @@ public class Main {
 		boolean goAhead = true;
 
 		verifyFeatures();
-		createOptions();
+		options = createOptions();
 
 		CommandLineParser parser = new DefaultParser();
 		Scanner scanner = new Scanner(System.in);
-
+		
 		while (goAhead) {
 			try {
 				System.out.print(">> ");
