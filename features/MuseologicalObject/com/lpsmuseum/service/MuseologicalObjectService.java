@@ -191,10 +191,10 @@ public class MuseologicalObjectService {
 	 * deleted.
 	 */
 	public void deleteObject(Long id) {
-		MuseologicalObjectDO obj = new MuseologicalObjectDO();
+		MuseologicalObject obj = new MuseologicalObject();
 
 		obj.setId(id);
 
-		dao.deleteObject(obj);
+		dao.deleteObject(obj.getEntity());
 	}
 }

@@ -13,23 +13,27 @@ import org.apache.commons.cli.ParseException;
 
 public class Main {
 
+	// Indicates what features the product has.
 	protected Map features = new HashMap();
+	// Indicates what options the current feature has.
 	protected Options options = new Options();
 
+	// Verifies if this feature is present.
 	public void verifyFeatures() {
 		System.out.println("M::verifyFeatures");
 	}
 
+	// Creates the options for this feature.
 	public Options createOptions() {
 		System.out.println("M::createOptions");
 		
-		// options.addOption(cmd, hasArgs, decription);
-
+		// Adds the option with given action and description.
 		options.addOption(ActionOption.builder("exit").desc("Exit the program.").build());
 		
 		return options;
 	}
 
+	// Verifies if the action input is valid for this feature.
 	public boolean verifyOption(CommandLine line) throws ParseException {
 		System.out.println("M::verifyOption");
 		
@@ -42,6 +46,7 @@ public class Main {
 		return true;
 	}
 
+	// "Go Flash, go!"
 	public void go() {
 		System.out.println("M::go");
 		
@@ -53,24 +58,29 @@ public class Main {
 		CommandLineParser parser = new DefaultParser();
 		Scanner scanner = new Scanner(System.in);
 		
+		// While there are commands to be executed, that is the command isn't "exit".
 		while (goAhead) {
 			try {
 				System.out.print(">> ");
 				String cmds = scanner.nextLine();
-				System.out.println("Commands: " + cmds);
 
+				// Just ignores commands empties.
 				if (cmds.isEmpty())
 					continue;
 
+				// Without '-', not works.
 				cmds = "-".concat(cmds);
+				// Execute the command, if his is a valid action, 
+				// 	and says if I still expect new commands.
 				goAhead = verifyOption(parser.parse(options, cmds.split(" ")));
 			} catch (ParseException exception) {
+				// Help information not awesome, without beauty and good formatted.
 				System.out.println();
 				System.out.println("<feature> <action>");
-				// for (Option option : options.getOptions()) {
 				for (Iterator it = options.getOptions().iterator(); it.hasNext();) {
 					Option option = (Option) it.next();
 					System.out.print("    " + option.getOpt());
+					// The feature have any action?
 					if (option instanceof ActionOption) {
 						Object actions[] = ((ActionOption) option).getActionArray();
 						if (actions.length > 0)
@@ -84,11 +94,14 @@ public class Main {
 			}
 		}
 
+		scanner.close();
 		System.out.println("Good bye!!");
 	}
 
 	public static void main(String[] args) {
 		new Main().go();
+		
+		System.exit(0);
 	}
 
 }

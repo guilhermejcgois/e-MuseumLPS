@@ -10,11 +10,14 @@ import java.util.Scanner;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.UnrecognizedOptionException;
 
 import com.lpsmuseum.dto.MuseologicalObject;
+import com.lpsmuseum.dto.object.Text;
 import com.lpsmuseum.service.MuseologicalObjectService;
 import com.lpsmuseum.service.builders.MuseologicalObjectBuilder;
 
@@ -24,32 +27,32 @@ public refines class Main {
 	
 	// Verifies if this feature is present.
 	public void verifyFeatures() {
-		System.out.println("MO::verifyFeatures");
+		System.out.println("Txt::verifyFeatures");
 		
 		Super().verifyFeatures();
 		
 		try {
-			Class.forName("com.lpsmuseum.entity.MuseologicalObjectDO");
-			features.put("object", true);
+			Class.forName("com.lpsmuseum.entity.TextDO");
+			features.put("text", true);
 		} catch (ClassNotFoundException exception) {
-			features.put("object", false);
+			features.put("text", false);
 		}
 	}
 	
 	// Creates the options for this feature.
 	public Options createOptions() {
-		System.out.println("MO::createOptions");
+		System.out.println("Txt::createOptions");
 		
 		options = Super().createOptions();
 		
-		if ((Boolean) features.get("object")) {
-			ActionOption object = new ActionOption("object", true, "Do an action with 'object' feature.");
-			object.add("create");
-			object.add("list");
-			object.add("edit");
-			object.add("delete");
-			options.addOption(object);
-			System.out.println("object added to options: " + options.getOption("object").getDescription());
+		if ((Boolean) features.get("text")) {
+			ActionOption text = new ActionOption("text", true, "Do an action with 'text' feature.");
+			text.add("create");
+			text.add("list");
+			text.add("edit");
+			text.add("delete");
+			options.addOption(text);
+			System.out.println("text added to options: " + options.getOption("text").getDescription());
 		}
 		
 		return options;
@@ -57,29 +60,29 @@ public refines class Main {
 	
 	// Verifies if the action input is valid for this feature.
 	public boolean verifyOption(CommandLine line) throws ParseException {
-		System.out.println("MO::verifyOption");
+		System.out.println("Txt::verifyOption");
 		
 		String action = null;
 		Scanner scanner = new Scanner(System.in);
 		
-		if (line.hasOption("object")) {
-			action = line.getOptionValue("object");
-			ActionOption option = (ActionOption) options.getOption("object");
+		if (line.hasOption("text")) {
+			action = line.getOptionValue("text");
+			ActionOption option = (ActionOption) options.getOption("text");
 			
 			if (!option.isValid(action)) {
 				scanner.close();
-					
-				throw new ParseException("Invalid action for object feature");
+				
+				throw new ParseException("Invalid action for text feature");
 			}
 			
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 			if (action.equals("list")) {
 				List<MuseologicalObject> objects = service.listObjects();
-				System.out.println(" ID | Name                                     | Date      ");
-				System.out.println("----+------------------------------------------+------------------------------");
+				System.out.println(" ID | Name                                     | Date      | Text");
+				System.out.println("----+------------------------------------------+-----------+------------------------");
 				for (Iterator it = objects.iterator(); it.hasNext(); ) {
 					MuseologicalObject object = (MuseologicalObject) it.next();
-					if (MuseologicalObject.class.equals(object.getClass())) {
+					if (Text.class.equals(object.getClass())) {
 						if (object.getId() < 10)
 							System.out.print(" 0" + object.getId() + " | ");
 						else
@@ -92,7 +95,9 @@ public refines class Main {
 							objectName = objectName.concat(" ");
 						System.out.print(objectName + " | ");
 						
-						System.out.println(dateFormat.format(object.getDate().getTime()));
+						System.out.println(dateFormat.format(object.getDate().getTime()) + " | ");
+						
+						System.out.println(((Text) object).getText());
 					}
 				}
 			} else if (action.equals("create")) {
@@ -105,8 +110,12 @@ public refines class Main {
 						Integer.valueOf(objectDate.substring(objectDate.lastIndexOf("/") + 1)), 
 						Integer.valueOf(objectDate.substring(objectDate.indexOf("/") + 1, objectDate.lastIndexOf("/"))), 
 						Integer.valueOf(objectDate.substring(0, objectDate.indexOf("/"))));
+				System.out.print("Text: ");
+				String objectText = scanner.nextLine();
+				Text instance = new Text();
+				instance.setText(objectText);
 				
-				service.createObject(new MuseologicalObjectBuilder().build(objectName, calendar));
+				service.createObject(new MuseologicalObjectBuilder().build(objectName, calendar, instance));
 			} else if (action.equals("edit")) {
 				scanner.reset();
 
@@ -117,22 +126,41 @@ public refines class Main {
 				MuseologicalObject object = service.findById(objectId);
 				boolean doUpdate = false;
 				
-				System.out.print("Name [" + object.getName() + "]: ");
-				String objectName = scanner.nextLine();
-				if (!objectName.isEmpty()) {
-					object.setName(objectName);
+				if (!(object instanceof Text)) {
+					System.out.println("How embarrassing, I can't retrieve the image with id=[" + objectId + "], either isn't a text instance, or doesn't exists, sorry. :(");
+					
+					scanner.close();
+					
+					return true;
+				}
+				Text text = (Text) object;
+				
+				System.out.print("Name [" + text.getName() + "]: ");
+				String textName = scanner.nextLine();
+				if (!textName.isEmpty()) {
+					text.setName(textName);
+					
 					doUpdate = true;
 				}
 				
-				System.out.print("Date (dd/MM/yyyy) [" + dateFormat.format(object.getDate().getTime()) + "]: ");
-				String objectDate = scanner.nextLine();
-				if (!objectDate.isEmpty()) {
+				System.out.print("Date (dd/MM/yyyy) [" + dateFormat.format(text.getDate().getTime()) + "]: ");
+				String textDate = scanner.nextLine();
+				if (!textDate.isEmpty()) {
 					Calendar calendar = Calendar.getInstance();
 					calendar.set(
-							Integer.valueOf(objectDate.substring(objectDate.lastIndexOf("/") + 1)), 
-							Integer.valueOf(objectDate.substring(objectDate.indexOf("/") + 1, objectDate.lastIndexOf("/"))), 
-							Integer.valueOf(objectDate.substring(0, objectDate.indexOf("/"))));
-					object.setDate(calendar);
+							Integer.valueOf(textDate.substring(textDate.lastIndexOf("/") + 1)), 
+							Integer.valueOf(textDate.substring(textDate.indexOf("/") + 1, textDate.lastIndexOf("/"))), 
+							Integer.valueOf(textDate.substring(0, textDate.indexOf("/"))));
+					text.setDate(calendar);
+					
+					if (!doUpdate)
+						doUpdate = true;
+				}
+				
+				System.out.print("Text [" + text.getText() + "]: ");
+				String textText = scanner.nextLine();
+				if (!textText.isEmpty()) {
+					text.setText(textText);
 					
 					if (!doUpdate)
 						doUpdate = true;
@@ -141,7 +169,7 @@ public refines class Main {
 				if (doUpdate) {
 					service.editObject(object);
 					
-					System.out.println("The museological object with id=[" + objectId + "] was updated successfully!");
+					System.out.println("The text with id=[" + objectId + "] was updated successfully!");
 				} else {
 					System.out.println("Not to do, sad... :/");
 				}
@@ -156,12 +184,12 @@ public refines class Main {
 				System.out.println();
 				try {
 					service.findById(objectId);
-					System.out.println("How embarrassing, I can't delete the museological object with id=[" + objectId + "], sorry. :(");
+					System.out.println("How embarrassing, I can't delete the text with id=[" + objectId + "], sorry. :(");
 				} catch (NullPointerException exception) {
-					System.out.println("The museological object with id=[" + objectId + "] was deleted successfully!");
+					System.out.println("The text with id=[" + objectId + "] was deleted successfully!");
 				}
 			}
-			
+
 			scanner.close();
 			
 			return true;

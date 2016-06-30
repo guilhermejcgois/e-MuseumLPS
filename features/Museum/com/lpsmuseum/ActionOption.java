@@ -13,7 +13,7 @@ public class ActionOption extends Option {
 	public ActionOption(String opt, boolean hasArg, String description) throws IllegalArgumentException {
 		super(opt, hasArg, description);
 	}
-
+	
 	public ActionOption(String opt, String longOpt, boolean hasArg, String description)
 			throws IllegalArgumentException {
 		super(opt, longOpt, hasArg, description);

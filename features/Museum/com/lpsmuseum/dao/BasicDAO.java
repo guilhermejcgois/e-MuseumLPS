@@ -52,7 +52,7 @@ public abstract class BasicDAO {
 		EntityManager em = PersistenceUtil.getEntityManager();
 		if(obj != null){
 			em.getTransaction().begin();
-			obj = em.merge(obj);
+			em.merge(obj);
 			em.remove(obj);
 			em.flush();
 			em.getTransaction().commit();

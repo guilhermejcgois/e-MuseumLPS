@@ -57,7 +57,7 @@ public class ImageDO extends MuseologicalObjectDO {
 	}
 
 	@Override
-	public MuseologicalObject getDto() {
+	public Image getDto() {
 		Image image = new Image();
 		
 		image.setId(getId());
