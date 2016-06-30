@@ -10,21 +10,21 @@
 					<description>
 						
 					</description>
-					<or mandatory="true" name="MuseologicalObject">
+					<and mandatory="true" name="MuseologicalObject">
 						<description>
 							
 						</description>
-						<feature mandatory="true" name="Image">
+						<feature name="Image">
 							<description>
 								
 							</description>
 						</feature>
-						<feature mandatory="true" name="Text">
+						<feature name="Text">
 							<description>
 								
 							</description>
 						</feature>
-					</or>
+					</and>
 				</and>
 			</and>
 		</struct>
