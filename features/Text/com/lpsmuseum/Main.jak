@@ -69,11 +69,8 @@ public refines class Main {
 			action = line.getOptionValue("text");
 			ActionOption option = (ActionOption) options.getOption("text");
 			
-			if (!option.isValid(action)) {
-				scanner.close();
-				
-				throw new ParseException("Invalid action for text feature");
-			}
+			if (!option.isValid(action))
+				throw new ParseException("Invalid action for object feature");
 			
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 			if (action.equals("list")) {
@@ -189,13 +186,9 @@ public refines class Main {
 					System.out.println("The text with id=[" + objectId + "] was deleted successfully!");
 				}
 			}
-
-			scanner.close();
 			
 			return true;
 		}
-		
-		scanner.close();
 		
 		return Super().verifyOption(line);
 	}
